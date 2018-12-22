@@ -28,7 +28,7 @@ await numbers
 List<int> numbers = new List<int> { 1, 2, 3 };
 
 List<int> incrementedNumbers = await numbers
-  .Select(number => {
+  .Select(async number => {
     await Task.Delay(1000);
     return number + 1;
   })
@@ -47,7 +47,7 @@ List<int> incrementedNumbers = await numbers
 List<int> numbers = new List<int> { 1, 2, 3 };
 
 List<int> sumOfIncrementedNumbers = await numbers
-  .Select(number => {
+  .Select(async number => {
     await Task.Delay(1000);
     return number + 1;
   })
