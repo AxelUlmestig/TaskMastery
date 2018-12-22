@@ -5,4 +5,12 @@
     <RootNamespace>TaskMastery</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>Axel Ulmestig</Authors>
+    <Owners>Axel Ulmestig</Owners>
+    <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+    <Description>Documentation and code can be found on GitHub https://github.com/AxelUlmestig/TaskMastery</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 </Project>
