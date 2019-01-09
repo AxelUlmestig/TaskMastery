@@ -12,12 +12,13 @@ namespace TaskMastery
         public static async Task<B> FlatMap<A, B>(this Task<A> task, Func<A, Task<B>> f) =>
             await f(await task);
 
-        public static Task<List<A>> WhenAll<A>(this List<Task<A>> list) =>
-            Task
-                .WhenAll(list)
-                .Map(result => new List<A>(result));
+        // C# can't implicitly convert from Task<A[]> to Task<IEnumerable<A>>
+        // without async/await...
+        public static async Task<IEnumerable<A>> WhenAll<A>(this IEnumerable<Task<A>> list) =>
+            await Task
+                .WhenAll(list);
 
-        public static Task WhenAll(this List<Task> list) =>
+        public static Task WhenAll(this IEnumerable<Task> list) =>
             Task.WhenAll(list);
     }
 }

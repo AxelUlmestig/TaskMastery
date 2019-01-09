@@ -2,7 +2,7 @@
 This library adds some utility functions for working with .Net core Tasks.
 
 ## Added Extension Methods
-### List\<Task\>.WhenAll()
+### IEnumerable\<Task\>.WhenAll()
 **Returns**: `Task`
 
 **Description**: Takes a list of Tasks and returns a Task that is completed when all the Tasks in the list have been completed.
@@ -13,13 +13,12 @@ List<int> numbers = new List<int> { 1, 2, 3 };
 
 await numbers
   .Select(_ => Task.Delay(1000))
-  .ToList()
   .WhenAll();
 
 // All the delay tasks will be awaited in parallel
 ```
-### List\<Task\<A\>\>.WhenAll()
-**Returns**: `Task<List<A>>`
+### IEnumerable\<Task\<A\>\>.WhenAll()
+**Returns**: `Task<IEnumerable<A>>`
 
 **Description**: Takes a list of `Task`s and returns a `Task` with the resulting list. This turns the Task with the list "inside out".
 
@@ -27,12 +26,11 @@ await numbers
 ```cs
 List<int> numbers = new List<int> { 1, 2, 3 };
 
-List<int> incrementedNumbers = await numbers
+IEnumerable<int> incrementedNumbers = await numbers
   .Select(async number => {
     await Task.Delay(1000);
     return number + 1;
   })
-  .ToList()
   .WhenAll();
 
 // incrementedNumbers == new List<int> { 2, 3, 4 };
@@ -46,12 +44,11 @@ List<int> incrementedNumbers = await numbers
 ```cs
 List<int> numbers = new List<int> { 1, 2, 3 };
 
-List<int> sumOfIncrementedNumbers = await numbers
+IEnumerable<int> sumOfIncrementedNumbers = await numbers
   .Select(async number => {
     await Task.Delay(1000);
     return number + 1;
   })
-  .ToList()
   .WhenAll()
   .Map(list => list.Aggregate(0, (a, b) => a + b));
 
