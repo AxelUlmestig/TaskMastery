@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,12 @@ namespace TaskMastery
 
         public static async Task<B> FlatMap<A, B>(this Task<A> task, Func<A, Task<B>> f) =>
             await f(await task);
+
+        public static IEnumerable<Task<B>> SelectTasks<A, B>(this IEnumerable<Task<A>> list, Func<A, B> f) =>
+            list.Select(task => task.Map(f));
+
+        public static IEnumerable<Task<B>> SelectTasksFlatten<A, B>(this IEnumerable<Task<A>> list, Func<A, Task<B>> f) =>
+            list.Select(task => task.FlatMap(f));
 
         // C# can't implicitly convert from Task<A[]> to Task<IEnumerable<A>>
         // without async/await...

@@ -1,3 +1,4 @@
+
 # Task Mastery
 This library adds some utility functions for working with .Net core Tasks.
 
@@ -65,6 +66,41 @@ var resultFromSecondHttpRequest = await SomeHttpRequestAsync()
   .FlatMap(resultFromFirstRequest => SomeOtherHttpRequestAsync(resultFromFirstRequest));
 // chains two asynchronous http requests together
 ```
+### IEnumerable\<Task\<A\>\>.SelectTasks(Func\<A, B\> f)
+**Returns**: `IEnumerable<Task<B>>`
+
+**Description**: Applies a function to the content of all Tasks in an IEnumerable.
+
+**Example Usage**:
+```cs
+List<int> numbers = new List<int> { 1, 2, 3 };
+
+IEnumerable<int> incrementedNumbers = await numbers
+  .Select(async number => {
+    await Task.Delay(1000);
+    return number + 1;
+  })
+  .SelectTasks(number => number + 1)
+  .WhenAll();
+
+// incrementedNumbers == new List<int> { 3, 4, 5 };
+```
+Notice how the function `number => number + 1` is of type `int -> int` despite us working with an `IEnumerable<Task<int>>`.
+### IEnumerable\<Task\<A\>\>.SelectTasksFlatten(Func\<A, Task\<B\>\> f)
+**Returns**: `IEnumerable<Task<B>>`
+
+**Description**: Applies an asynchronous function to the content of all Tasks
+in an IEnumerable.
+
+**Example Usage**:
+```cs
+List<int> numbers = new List<int> { 1, 2, 3 };
+
+IEnumerable<Task<SomeOtherResponse>> responses = numbers
+  .Select(n => SomeHttpRequestAsync(n))
+  .SelectTaskFlatten(response => SomeOtherHttpRequestAsync(response));
+```
+`responses` will now be a list of all the responses from `SomeOtherHttpRequestAsync`. If we would have used `SelectTasks` instead of `SelectTasksFlatten` then `responses` would have been `IEnumerable<Task<Task<SomeOtherResponse>>>` which is just plain silly. The "flatten" part means that we flatten the nested Tasks to one Task.
 ## Build package
 ```
 $ dotnet pack --configuration release
