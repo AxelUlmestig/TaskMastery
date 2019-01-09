@@ -1,4 +1,5 @@
 
+
 # Task Mastery
 This library adds some utility functions for working with .Net core Tasks.
 
@@ -18,6 +19,8 @@ await numbers
 
 // All the delay tasks will be awaited in parallel
 ```
+<hr>
+
 ### IEnumerable\<Task\<A\>\>.WhenAll()
 **Returns**: `Task<IEnumerable<A>>`
 
@@ -36,6 +39,8 @@ IEnumerable<int> incrementedNumbers = await numbers
 
 // incrementedNumbers == new List<int> { 2, 3, 4 };
 ```
+<hr>
+
 ### Task\<A\>.Map\<A, B\>(Func\<A, B\> f)
 **Returns**: `Task<B>`
 
@@ -55,6 +60,8 @@ IEnumerable<int> sumOfIncrementedNumbers = await numbers
 
 // sumOfIncrementedNumbers == 2 + 3 + 4 == 9
 ```
+<hr>
+
 ### Task\<A\>.FlatMap(Func\<A, Task\<B\>\> f)
 **Returns**: `Task<B>`
 
@@ -66,6 +73,8 @@ var resultFromSecondHttpRequest = await SomeHttpRequestAsync()
   .FlatMap(resultFromFirstRequest => SomeOtherHttpRequestAsync(resultFromFirstRequest));
 // chains two asynchronous http requests together
 ```
+<hr>
+
 ### IEnumerable\<Task\<A\>\>.SelectTasks(Func\<A, B\> f)
 **Returns**: `IEnumerable<Task<B>>`
 
@@ -86,6 +95,8 @@ IEnumerable<int> incrementedNumbers = await numbers
 // incrementedNumbers == new List<int> { 3, 4, 5 };
 ```
 Notice how the function `number => number + 1` is of type `int -> int` despite us working with an `IEnumerable<Task<int>>`.
+<hr>
+
 ### IEnumerable\<Task\<A\>\>.SelectTasksFlatten(Func\<A, Task\<B\>\> f)
 **Returns**: `IEnumerable<Task<B>>`
 
