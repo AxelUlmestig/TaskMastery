@@ -112,6 +112,23 @@ IEnumerable<Task<SomeOtherResponse>> responses = numbers
   .SelectTaskFlatten(response => SomeOtherHttpRequestAsync(response));
 ```
 `responses` will now be a list of all the responses from `SomeOtherHttpRequestAsync`. If we would have used `SelectTasks` instead of `SelectTasksFlatten` then `responses` would have been `IEnumerable<Task<Task<SomeOtherResponse>>>` which is just plain silly. The "flatten" part means that we flatten the nested Tasks to one Task.
+<hr>
+
+### IEnumerable\<Task\<A\>\>.SelectBatchAsync(Func\<A, Task\<B\>\> f, int batchSize)
+**Returns**: `IEnumerable<Task<B>>`
+
+**Description**: Applies the async function to the elements in the IEnumerable in batches. This can be useful if you want to limit the number of tasks being executed in parallel to the given batch size.
+
+**Example Usage**:
+```cs
+var responses = await Enumerable
+  .Range(0, 1000)
+  .SelectBatchAsync(n => HttpRequestToWeakServer(n), 10);
+
+// The HTTP requests will be executed in batches of 10.
+// The next 10 requests will not be sent until the first 10
+// are done.
+```
 ## Build package
 ```
 $ dotnet pack --configuration release
