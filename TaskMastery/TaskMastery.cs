@@ -60,6 +60,7 @@ namespace TaskMastery
             }
         }
 
+        [Obsolete("Use WhenAllBatched instead. This will be removed")]
         public static async Task<IEnumerable<B>> SelectBatchAsync<A, B>(this IEnumerable<A> list, Func<A, Task<B>> f, int batchSize)
         {
             IEnumerable<B> output = new List<B>();

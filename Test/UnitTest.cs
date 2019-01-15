@@ -65,7 +65,6 @@ namespace TaskMastery
                 .Range(0, 13)
                 .Select(async n => {
                     await Task.Delay(1000);
-                    Console.WriteLine(n);
                     return n + 1;
                 })
                 .WhenAllBatched(3);
