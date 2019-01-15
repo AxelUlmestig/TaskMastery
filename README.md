@@ -42,6 +42,52 @@ IEnumerable<int> incrementedNumbers = await numbers
 ```
 <hr>
 
+### IEnumerable\<Task\>.WhenAllBatched(int batchSize)
+**Returns**: `Task`
+
+**Description**: Takes a list of Tasks and returns a Task that is completed when all the Tasks in the list have been completed. This will not evaluate all Tasks in parallel unlike `WhenAll`. The `batchSize` argument decides how many Tasks will be evaluated in parallel.
+
+**Example usage**:
+```cs
+List<int> numbers = new List<int> { 1, 2, 3, 4, 5  };
+
+await numbers
+  .Select(_ => Task.Delay(1000))
+  .WhenAllBatched(2);
+
+// This will run the first two tasks in parallel and then
+// continue with the next two once the first ones are done
+// and so on.
+// This can be useful if you want to avoid flooding some
+// service like an external API or database
+```
+<hr>
+
+### IEnumerable\<Task\<A\>\>.WhenAllBatched(int batchSize)
+**Returns**: `Task<IEnumerable<A>>`
+
+**Description**: Takes a list of Tasks and returns a Task with the resulting list. This turns the Task with the list "inside out". This will not evaluate all Tasks in parallel unlike `WhenAll`. The `batchSize` argument decides how many Tasks will be evaluated in parallel.
+
+**Example usage**:
+```cs
+List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };
+
+IEnumerable<int> incrementedNumbers = await numbers
+  .Select(async number => {
+    await Task.Delay(1000);
+    return number + 1;
+  })
+  .WhenAllBatched(2);
+
+// incrementedNumbers == new List<int> { 2, 3, 4, 5, 6 };
+// This will run the first two tasks in parallel and then
+// continue with the next two once the first ones are done
+// and so on.
+// This can be useful if you want to avoid flooding some
+// service like an external API or database
+```
+<hr>
+
 ### Task\<A\>.Map\<A, B\>(Func\<A, B\> f)
 **Returns**: `Task<B>`
 
