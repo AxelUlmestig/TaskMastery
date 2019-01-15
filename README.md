@@ -1,8 +1,6 @@
-
-
-
 # Task Mastery
 This library adds some utility functions for working with .Net core Tasks.
+Specifically when working with LINQ and Tasks at the same time.
 
 ## Added Extension Methods
 ### IEnumerable\<Task\>.WhenAll()
