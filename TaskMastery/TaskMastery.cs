@@ -28,6 +28,38 @@ namespace TaskMastery
         public static Task WhenAll(this IEnumerable<Task> list) =>
             Task.WhenAll(list);
 
+        public static async Task<IEnumerable<A>> WhenAllBatched<A>(this IEnumerable<Task<A>> list, int batchSize)
+        {
+            IEnumerable<A> output = new List<A>();
+            var remainingList = list;
+
+            while(remainingList.Any())
+            {
+                var batch = await remainingList
+                    .Take(batchSize)
+                    .WhenAll();
+
+                output = output.Concat(batch);
+                remainingList = remainingList.Skip(batchSize);
+            }
+
+            return output;
+        }
+
+        public static async Task WhenAllBatched(this IEnumerable<Task> list, int batchSize)
+        {
+            var remainingList = list;
+
+            while(remainingList.Any())
+            {
+                await remainingList
+                    .Take(batchSize)
+                    .WhenAll();
+
+                remainingList = remainingList.Skip(batchSize);
+            }
+        }
+
         public static async Task<IEnumerable<B>> SelectBatchAsync<A, B>(this IEnumerable<A> list, Func<A, Task<B>> f, int batchSize)
         {
             IEnumerable<B> output = new List<B>();

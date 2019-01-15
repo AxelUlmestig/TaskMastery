@@ -57,5 +57,23 @@ namespace TaskMastery
 
             Assert.Equal(expected, x);
         }
+
+        [Fact]
+        public async Task WhenAllBatched()
+        {
+            IEnumerable<int> x = await Enumerable
+                .Range(0, 13)
+                .Select(async n => {
+                    await Task.Delay(1000);
+                    Console.WriteLine(n);
+                    return n + 1;
+                })
+                .WhenAllBatched(3);
+
+            IEnumerable<int> expected = Enumerable
+                .Range(1, 13);
+
+            Assert.Equal(expected, x);
+        }
     }
 }
